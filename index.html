@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CRAFT prompt builder</title>
+<meta name="description" content="Generate a reusable CRAFT prompt for a one-page ministry AI strategy blueprint, in English or Bahasa Melayu.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #221C26;
+    --muted: #6A6270;
+    --plum: #5B3B57;
+    --plum-soft: #EFE8EE;
+    --mustard: #F2C14E;
+    --paper: #F5F6F3;
+    --surface: #FFFFFF;
+    --line: #D9D5DC;
+    --focus: #1E6FB8;
+    --sans: "Public Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #EDE8EF; --muted: #A79FAD; --plum: #D2B3CD; --plum-soft: #2C2430;
+      --paper: #17141A; --surface: #211D25; --line: #3A3340; --focus: #7DB6F0;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #EDE8EF; --muted: #A79FAD; --plum: #D2B3CD; --plum-soft: #2C2430;
+    --paper: #17141A; --surface: #211D25; --line: #3A3340; --focus: #7DB6F0;
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: var(--sans); font-size: 16px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+  /* Masthead */
+  .masthead { border-bottom: 1px solid var(--line); background: var(--surface); }
+  .top { display: flex; flex-wrap: wrap; gap: 20px 40px; align-items: flex-end; justify-content: space-between; padding-top: 28px; }
+  .brand { max-width: 62ch; }
+  h1 { margin: 0 0 6px; font-size: clamp(1.6rem, 3vw, 2.1rem); font-weight: 800; letter-spacing: -0.01em; color: var(--plum); line-height: 1.15; }
+  .brand p { margin: 0; color: var(--muted); }
+  .lang { display: flex; flex-direction: column; gap: 6px; }
+  .lang-label { font-size: 0.85rem; color: var(--muted); }
+  .seg { display: inline-flex; border: 1.5px solid var(--plum); border-radius: 6px; overflow: hidden; }
+  .seg button { border: 0; background: transparent; padding: 8px 16px; cursor: pointer; font-weight: 600; color: var(--plum); }
+  .seg button + button { border-left: 1.5px solid var(--plum); }
+  .seg button[aria-pressed="true"] { background: var(--plum); color: var(--surface); }
+
+  /* CRAFT strip: the one bold element, echoing the highlighted headings on the slide */
+  .craft { display: flex; gap: clamp(12px, 4vw, 48px); padding-top: 22px; padding-bottom: 18px; overflow-x: auto; }
+  .craft a { text-decoration: none; color: var(--ink); display: flex; align-items: baseline; gap: 8px; white-space: nowrap; border-radius: 4px; }
+  .craft .L {
+    font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 800; line-height: 1; color: var(--plum);
+    background: linear-gradient(transparent 58%, var(--mustard) 58%, var(--mustard) 92%, transparent 92%);
+    padding: 0 4px;
+  }
+  .craft .W { font-size: 0.95rem; color: var(--muted); font-weight: 500; }
+  .craft a:hover .W { color: var(--ink); }
+
+  /* Layout */
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; padding-top: 28px; padding-bottom: 40px; }
+  @media (min-width: 1000px) { .layout { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 48px; } }
+
+  .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 8px; }
+  .btn { border: 1.5px solid var(--plum); background: var(--surface); color: var(--plum); padding: 8px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+  .btn:hover { background: var(--plum-soft); }
+  .btn.primary { background: var(--plum); color: var(--surface); }
+  .btn.primary:hover { filter: brightness(1.1); background: var(--plum); }
+  .btn.quiet { border-color: var(--line); color: var(--muted); }
+  .progress { margin-left: auto; font-size: 0.9rem; color: var(--muted); }
+
+  /* Sections */
+  section.block { padding: 28px 0 8px; border-top: 1px solid var(--line); margin-top: 20px; }
+  section.block:first-child { border-top: 0; margin-top: 0; }
+  .block-head { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 18px; }
+  .block-head .L {
+    font-size: 2.4rem; font-weight: 800; line-height: 1; color: var(--plum); padding: 0 4px;
+    background: linear-gradient(transparent 58%, var(--mustard) 58%, var(--mustard) 92%, transparent 92%);
+  }
+  .block-head h2 { margin: 2px 0 2px; font-size: 1.25rem; font-weight: 800; }
+  .block-head p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+  .field { margin-bottom: 20px; max-width: 72ch; }
+  .field-top { display: flex; gap: 12px; align-items: baseline; justify-content: space-between; margin-bottom: 4px; }
+  .field label { font-weight: 600; }
+  .opt { font-weight: 400; color: var(--muted); font-size: 0.85rem; margin-left: 6px; }
+  .ex-btn { border: 0; background: none; color: var(--plum); font-weight: 600; font-size: 0.85rem; cursor: pointer; padding: 2px 4px; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+  .help { margin: 0 0 8px; color: var(--muted); font-size: 0.88rem; }
+  input[type="text"], textarea, select {
+    width: 100%; background: var(--surface); border: 1.5px solid var(--line); border-radius: 5px;
+    padding: 9px 11px; line-height: 1.45;
+  }
+  textarea { resize: vertical; min-height: 64px; }
+  input[type="text"]:hover, textarea:hover, select:hover { border-color: var(--muted); }
+  input::placeholder, textarea::placeholder { color: var(--muted); opacity: 0.75; }
+  .check { display: flex; gap: 10px; align-items: flex-start; }
+  .check input { width: 18px; height: 18px; margin-top: 3px; accent-color: var(--plum); }
+  input:disabled, textarea:disabled, .ex-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  /* Preview */
+  .preview { position: relative; }
+  @media (min-width: 1000px) { .preview-inner { position: sticky; top: calc(16px + env(safe-area-inset-top, 0px)); } }
+  .preview-inner { background: var(--surface); border: 1.5px solid var(--line); border-left: 6px solid var(--plum); border-radius: 6px; }
+  .preview-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+  .preview-head h2 { margin: 0; font-size: 1.1rem; font-weight: 800; }
+  .preview-head .actions { display: flex; gap: 8px; }
+  .stats { font-size: 0.82rem; color: var(--muted); padding: 8px 16px 0; margin: 0; }
+  #output {
+    margin: 0; padding: 12px 16px 20px; font-family: var(--mono); font-size: 0.84rem; line-height: 1.6;
+    white-space: pre-wrap; word-wrap: break-word; overflow-y: auto; max-height: 70vh;
+  }
+  @media (min-width: 1000px) { #output { max-height: calc(100vh - 150px); } }
+  #output .ph { background: var(--plum-soft); color: var(--plum); border-radius: 3px; }
+
+  .foot { padding-bottom: 32px; color: var(--muted); font-size: 0.88rem; }
+  .foot p { max-width: 80ch; margin: 0; border-top: 1px solid var(--line); padding-top: 16px; }
+
+  .jump {
+    position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    background: var(--plum); color: var(--surface); text-decoration: none; font-weight: 600;
+    padding: 10px 16px; border-radius: 999px; box-shadow: 0 4px 14px rgba(40, 20, 40, 0.25);
+  }
+  @media (min-width: 1000px) { .jump { display: none; } }
+
+  .toast {
+    position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 20px);
+    background: var(--ink); color: var(--paper); padding: 10px 18px; border-radius: 6px; font-weight: 600;
+    opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="wrap top">
+    <div class="brand">
+      <h1 id="t-title"></h1>
+      <p id="t-subtitle"></p>
+    </div>
+    <div class="lang" role="group" aria-labelledby="t-langLabel">
+      <span id="t-langLabel" class="lang-label"></span>
+      <div class="seg">
+        <button type="button" data-lang="en" aria-pressed="true">English</button>
+        <button type="button" data-lang="ms" aria-pressed="false">Bahasa Melayu</button>
+      </div>
+    </div>
+  </div>
+  <nav class="wrap craft" id="craft-nav" aria-label="CRAFT"></nav>
+</header>
+
+<main class="wrap layout">
+  <form id="form" novalidate autocomplete="off">
+    <div class="toolbar">
+      <button type="button" class="btn" id="fillAll"></button>
+      <button type="button" class="btn quiet" id="clearAll"></button>
+      <span class="progress" id="progress" aria-live="polite"></span>
+    </div>
+    <div id="sections"></div>
+  </form>
+
+  <aside id="preview" class="preview">
+    <div class="preview-inner">
+      <div class="preview-head">
+        <h2 id="t-previewTitle"></h2>
+        <div class="actions">
+          <button type="button" class="btn primary" id="copyBtn"></button>
+          <button type="button" class="btn" id="dlBtn"></button>
+        </div>
+      </div>
+      <p class="stats" id="stats"></p>
+      <pre id="output" tabindex="0"></pre>
+    </div>
+  </aside>
+</main>
+
+<footer class="wrap foot"><p id="t-footer"></p></footer>
+<a class="jump" href="#preview" id="t-jump"></a>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- Field configuration ---------- */
+  const FIELDS = [
+    { id: "ministry", s: "C", type: "text" },
+    { id: "mandate", s: "C", type: "textarea", rows: 3 },
+    { id: "priorities", s: "C", type: "textarea", rows: 3 },
+    { id: "maturity", s: "C", type: "select", options: ["", "low", "moderate", "advanced"], example: "moderate" },
+    { id: "maturityNote", s: "C", type: "text" },
+    { id: "painPoints", s: "C", type: "textarea", rows: 4 },
+    { id: "dataAssets", s: "C", type: "textarea", rows: 4 },
+    { id: "systems", s: "C", type: "textarea", rows: 2 },
+    { id: "constraints", s: "C", type: "textarea", rows: 3 },
+    { id: "role", s: "R", type: "textarea", rows: 4 },
+    { id: "ambition", s: "A", type: "textarea", rows: 2, optional: true },
+    { id: "useCaseCount", s: "A", type: "select", options: ["range", "3", "4", "5"], example: "range" },
+    { id: "candidates", s: "A", type: "textarea", rows: 3, optional: true },
+    { id: "rpsa", s: "A", type: "textarea", rows: 3, optional: true },
+    { id: "roadmap", s: "A", type: "checkbox" },
+    { id: "roadmapStart", s: "A", type: "text", optional: true, dependsOn: "roadmap" },
+    { id: "checkpoint", s: "A", type: "text", optional: true, dependsOn: "roadmap" },
+    { id: "outputLang", s: "F", type: "select", options: ["en", "ms"] },
+    { id: "wordLimit", s: "F", type: "text" },
+    { id: "audience", s: "T", type: "textarea", rows: 4 }
+  ];
+  const SECTIONS = ["C", "R", "A", "F", "T"];
+  const TEXT_FIELDS = FIELDS.filter(f => f.type === "text" || f.type === "textarea");
+
+  /* ---------- Defaults used when a field is left empty ---------- */
+  const DEFAULTS = {
+    en: {
+      role: "Act as a senior public sector AI strategy adviser with expertise in Malaysian government digital transformation, data governance and responsible AI. You are pragmatic, evidence-driven and focused on public value, accountability and value for money.",
+      audience: "Top management of the ministry (Secretary-General, Deputy Secretaries-General, Directors and the Chief Digital Officer) who make decisions but are not technical specialists. Use clear, concise and formal language, explain technical terms briefly, and emphasise public value, accountability and return on investment.",
+      words: "400–500"
+    },
+    ms: {
+      role: "Bertindak sebagai penasihat kanan strategi AI sektor awam yang berkepakaran dalam transformasi digital kerajaan Malaysia, tadbir urus data dan AI bertanggungjawab. Anda bersikap pragmatik, berasaskan bukti dan memberikan tumpuan kepada nilai awam, akauntabiliti serta nilai faedah bagi wang yang dibelanjakan.",
+      audience: "Pengurusan tertinggi kementerian (Ketua Setiausaha, Timbalan Ketua Setiausaha, Pengarah dan Ketua Pegawai Digital) yang membuat keputusan tetapi bukan pakar teknikal. Gunakan bahasa yang jelas, ringkas dan rasmi, terangkan istilah teknikal secara ringkas, dan tekankan nilai awam, akauntabiliti serta pulangan pelaburan.",
+      words: "400–500"
+    }
+  };
+
+  /* ---------- Placeholders kept in the prompt when a field is empty ---------- */
+  const PH = {
+    en: {
+      ministry: "[NAME OF MINISTRY/AGENCY]",
+      mandate: "[brief description of the ministry's mandate and main services]",
+      priorities: "[e.g., ministry strategic plan, relevant national policies]",
+      maturity: "[Low / Moderate / Advanced — brief description]",
+      painPoints: "[e.g., long processing times, backlogs, manual verification]",
+      dataAssets: "[list main datasets, their owners and current condition]",
+      systems: "[e.g., core systems, cloud usage]",
+      constraints: "[budget, manpower, skills, procurement, security classification]"
+    },
+    ms: {
+      ministry: "[NAMA KEMENTERIAN/AGENSI]",
+      mandate: "[penerangan ringkas tentang mandat dan perkhidmatan utama kementerian]",
+      priorities: "[contohnya, pelan strategik kementerian, dasar nasional yang berkaitan]",
+      maturity: "[Rendah / Sederhana / Tinggi — penerangan ringkas]",
+      painPoints: "[contohnya, tempoh pemprosesan yang panjang, tunggakan kerja, pengesahan secara manual]",
+      dataAssets: "[senaraikan set data utama, pemiliknya dan keadaan semasa]",
+      systems: "[contohnya, sistem teras, penggunaan awan]",
+      constraints: "[bajet, tenaga kerja, kemahiran, perolehan, klasifikasi keselamatan]"
+    }
+  };
+
+  /* ---------- Interface text ---------- */
+  const T = {
+    en: {
+      docTitle: "CRAFT prompt builder",
+      title: "CRAFT prompt builder: ministry AI blueprint",
+      subtitle: "Fill in your ministry's details to generate a CRAFT prompt for a one-page AI strategy blueprint and 100-day acceleration roadmap. Any field you leave empty stays as a [placeholder] in the prompt.",
+      langLabel: "Interface and prompt language",
+      fillAll: "Fill all with examples",
+      clearAll: "Clear all",
+      confirmClear: "Clear all fields? This cannot be undone.",
+      cleared: "All fields cleared",
+      filled: "Examples added to all fields",
+      useExample: "Use example",
+      egPrefix: "e.g. ",
+      optional: "optional",
+      previewTitle: "Your prompt",
+      copy: "Copy prompt",
+      copied: "Prompt copied",
+      copyFail: "Copy failed. Select the prompt text and copy it manually.",
+      download: "Download .md",
+      downloaded: "Prompt downloaded",
+      progress: (n, t) => `${n} of ${t} fields filled`,
+      stats: (w, c) => `${w} words, ${c} characters`,
+      jump: "View prompt",
+      footer: "The examples describe an illustrative scenario only. Check all figures, acts and policy targets against official sources before using the generated blueprint.",
+      sections: {
+        C: ["Context", "Who the ministry is and where it stands today."],
+        R: ["Role", "Who the AI should act as."],
+        A: ["Action", "What the AI should draft, plus any inputs you already have."],
+        F: ["Format", "How the output should be laid out."],
+        T: ["Target audience", "Who will read the blueprint."]
+      },
+      options: {
+        maturity: { "": "Select a level", low: "Low", moderate: "Moderate", advanced: "Advanced" },
+        useCaseCount: { range: "3 to 5", "3": "3", "4": "4", "5": "5" },
+        outputLang: { en: "English", ms: "Bahasa Melayu" }
+      },
+      fields: {
+        ministry: { label: "Ministry or agency name", help: "Full name with acronym.",
+          ex: "Ministry of Human Resources (KESUMA)" },
+        mandate: { label: "Core mandate", help: "The ministry's main responsibilities and services.",
+          ex: "Labour policy, workforce skills development, industrial relations, and occupational safety and health. Main services include labour complaint handling, employment permits and training grants." },
+        priorities: { label: "Strategic priorities", help: "Plans and policies the blueprint should support.",
+          ex: "Ministry strategic plan; national digital economy and workforce upskilling agenda; better service delivery to employers and workers." },
+        maturity: { label: "Current digital/AI maturity", help: "Choose the closest level." },
+        maturityNote: { label: "Maturity description", help: "One or two sentences on where things stand today.",
+          ex: "Most services are online, but analytics is limited and no AI system is in production yet." },
+        painPoints: { label: "Main service pain points", help: "Problems citizens or staff face today. One per line works well.",
+          ex: "Labour complaints take several weeks to resolve\nTraining grant applications are verified manually\nThe call centre handles a high volume of repetitive enquiries" },
+        dataAssets: { label: "Key data assets", help: "Main datasets, their owners and current condition. One per line.",
+          ex: "Labour complaint records (Industrial Relations Department): digitised, inconsistent formats\nTraining grant applications: partly scanned PDFs\nEmployer registration data: structured, updated monthly" },
+        systems: { label: "Existing systems and platforms", help: "Core systems, portals and hosting.",
+          ex: "Online complaint portal; grant management system; hosted on government cloud." },
+        constraints: { label: "Constraints", help: "Budget, manpower, skills, procurement and security classification.",
+          ex: "Few in-house data scientists; no dedicated AI budget for 2026; most data classified as Restricted (Terhad)." },
+        role: { label: "AI role", help: "Leave empty to use the default adviser role shown in the example." },
+        ambition: { label: "Intended 2030 outcome", help: "The direction you want the ambition statement to take.",
+          ex: "Faster, fairer resolution of labour complaints and better matching of workers to jobs and training." },
+        useCaseCount: { label: "Number of use cases", help: "The blueprint recommends 3 to 5." },
+        candidates: { label: "Use cases already in mind", help: "The AI will assess these before proposing others. One per line.",
+          ex: "Complaint triage and routing\nChatbot for employer and worker enquiries\nDocument checking for grant applications" },
+        rpsa: { label: "Known RPSA 2026–2030 targets", help: "Paste the exact targets from official documents. Leave empty if unsure.",
+          ex: "Service turnaround time target: [paste exact figure]\nDigital service adoption target: [paste exact figure]" },
+        roadmap: { label: "Include the 100-day acceleration roadmap", help: "Adds the three phases (Mobilise, Build, Prove), their milestones and the checkpoint deliverable to the prompt." },
+        roadmapStart: { label: "Roadmap start date", help: "Lets the AI convert day numbers into calendar dates.",
+          ex: "1 November 2026" },
+        checkpoint: { label: "Next cohort checkpoint", help: "When the live pilot and measured baseline metrics are due.",
+          ex: "February 2027" },
+        outputLang: { label: "Language of the blueprint", help: "The language the AI should write the blueprint in." },
+        wordLimit: { label: "Length of main text", help: "Word range, excluding tables. Leave empty for 400–500.",
+          ex: "400–500" },
+
+        audience: { label: "Target audience", help: "Leave empty to use the default top-management audience shown in the example." }
+      }
+    },
+    ms: {
+      docTitle: "Pembina gesaan CRAFT",
+      title: "Pembina gesaan CRAFT: pelan tindakan AI kementerian",
+      subtitle: "Isikan butiran kementerian anda untuk menjana gesaan CRAFT bagi pelan tindakan strategi AI satu halaman dan pelan hala tuju pecutan 100 hari. Medan yang dibiarkan kosong akan kekal sebagai [ruang isian] dalam gesaan.",
+      langLabel: "Bahasa antara muka dan gesaan",
+      fillAll: "Isi semua dengan contoh",
+      clearAll: "Kosongkan semua",
+      confirmClear: "Kosongkan semua medan? Tindakan ini tidak boleh dibatalkan.",
+      cleared: "Semua medan telah dikosongkan",
+      filled: "Contoh telah dimasukkan ke dalam semua medan",
+      useExample: "Guna contoh",
+      egPrefix: "cth. ",
+      optional: "pilihan",
+      previewTitle: "Gesaan anda",
+      copy: "Salin gesaan",
+      copied: "Gesaan telah disalin",
+      copyFail: "Gagal menyalin. Pilih teks gesaan dan salin secara manual.",
+      download: "Muat turun .md",
+      downloaded: "Gesaan telah dimuat turun",
+      progress: (n, t) => `${n} daripada ${t} medan telah diisi`,
+      stats: (w, c) => `${w} patah perkataan, ${c} aksara`,
+      jump: "Lihat gesaan",
+      footer: "Contoh yang diberikan menggambarkan senario ilustrasi sahaja. Semak semua angka, akta dan sasaran dasar dengan sumber rasmi sebelum menggunakan pelan tindakan yang dijana.",
+      sections: {
+        C: ["Konteks", "Profil kementerian dan kedudukannya pada masa ini."],
+        R: ["Peranan", "Peranan yang perlu dimainkan oleh AI."],
+        A: ["Tindakan", "Perkara yang perlu didrafkan oleh AI serta input sedia ada anda."],
+        F: ["Format", "Susun atur output."],
+        T: ["Khalayak sasaran", "Pembaca pelan tindakan ini."]
+      },
+      options: {
+        maturity: { "": "Pilih tahap", low: "Rendah", moderate: "Sederhana", advanced: "Tinggi" },
+        useCaseCount: { range: "3 hingga 5", "3": "3", "4": "4", "5": "5" },
+        outputLang: { en: "Bahasa Inggeris", ms: "Bahasa Melayu" }
+      },
+      fields: {
+        ministry: { label: "Nama kementerian atau agensi", help: "Nama penuh berserta akronim.",
+          ex: "Kementerian Sumber Manusia (KESUMA)" },
+        mandate: { label: "Mandat teras", help: "Tanggungjawab dan perkhidmatan utama kementerian.",
+          ex: "Dasar buruh, pembangunan kemahiran tenaga kerja, perhubungan perusahaan serta keselamatan dan kesihatan pekerjaan. Perkhidmatan utama termasuk pengendalian aduan buruh, permit pekerjaan dan geran latihan." },
+        priorities: { label: "Keutamaan strategik", help: "Pelan dan dasar yang perlu disokong oleh pelan tindakan ini.",
+          ex: "Pelan strategik kementerian; agenda ekonomi digital negara dan peningkatan kemahiran tenaga kerja; penambahbaikan penyampaian perkhidmatan kepada majikan dan pekerja." },
+        maturity: { label: "Tahap kematangan digital/AI semasa", help: "Pilih tahap yang paling hampir." },
+        maturityNote: { label: "Penerangan tahap kematangan", help: "Satu atau dua ayat tentang kedudukan semasa.",
+          ex: "Kebanyakan perkhidmatan telah didigitalkan, tetapi analitik masih terhad dan belum ada sistem AI yang beroperasi." },
+        painPoints: { label: "Isu utama perkhidmatan", help: "Masalah yang dihadapi oleh rakyat atau kakitangan pada masa ini. Satu isu bagi setiap baris.",
+          ex: "Aduan buruh mengambil masa beberapa minggu untuk diselesaikan\nPermohonan geran latihan disahkan secara manual\nPusat panggilan mengendalikan jumlah pertanyaan berulang yang tinggi" },
+        dataAssets: { label: "Aset data utama", help: "Set data utama, pemiliknya dan keadaan semasa. Satu set data bagi setiap baris.",
+          ex: "Rekod aduan buruh (Jabatan Perhubungan Perusahaan): telah didigitalkan, format tidak seragam\nPermohonan geran latihan: sebahagiannya dalam bentuk PDF imbasan\nData pendaftaran majikan: berstruktur, dikemas kini setiap bulan" },
+        systems: { label: "Sistem dan platform sedia ada", help: "Sistem teras, portal dan pengehosan.",
+          ex: "Portal aduan dalam talian; sistem pengurusan geran; dihoskan di awan kerajaan." },
+        constraints: { label: "Kekangan", help: "Bajet, tenaga kerja, kemahiran, perolehan dan klasifikasi keselamatan.",
+          ex: "Bilangan saintis data dalaman yang terhad; tiada peruntukan khusus AI bagi tahun 2026; kebanyakan data dikelaskan sebagai Terhad." },
+        role: { label: "Peranan AI", help: "Biarkan kosong untuk menggunakan peranan penasihat lalai seperti dalam contoh." },
+        ambition: { label: "Hasil yang dihasratkan menjelang 2030", help: "Hala tuju yang dikehendaki bagi pernyataan aspirasi.",
+          ex: "Penyelesaian aduan buruh yang lebih pantas dan adil serta pemadanan pekerja dengan pekerjaan dan latihan yang lebih baik." },
+        useCaseCount: { label: "Bilangan kes penggunaan", help: "Pelan tindakan mengesyorkan 3 hingga 5 kes." },
+        candidates: { label: "Kes penggunaan yang telah dikenal pasti", help: "AI akan menilai kes ini terlebih dahulu sebelum mencadangkan kes lain. Satu kes bagi setiap baris.",
+          ex: "Penyaringan dan penghalaan aduan\nBot sembang untuk pertanyaan majikan dan pekerja\nSemakan dokumen permohonan geran" },
+        rpsa: { label: "Sasaran RPSA 2026–2030 yang diketahui", help: "Tampal sasaran yang tepat daripada dokumen rasmi. Biarkan kosong jika tidak pasti.",
+          ex: "Sasaran tempoh penyelesaian perkhidmatan: [tampal angka yang tepat]\nSasaran penggunaan perkhidmatan digital: [tampal angka yang tepat]" },
+        roadmap: { label: "Sertakan pelan hala tuju pecutan 100 hari", help: "Menambah tiga fasa (Menggerakkan, Membina, Membuktikan), tonggak pencapaiannya dan hasil yang perlu dibawa ke titik semakan ke dalam gesaan." },
+        roadmapStart: { label: "Tarikh mula pelan hala tuju", help: "Membolehkan AI menukar bilangan hari kepada tarikh kalendar.",
+          ex: "1 November 2026" },
+        checkpoint: { label: "Titik semakan kohort yang berikutnya", help: "Tarikh projek rintis langsung dan metrik nilai asas yang telah diukur perlu dibentangkan.",
+          ex: "Februari 2027" },
+        outputLang: { label: "Bahasa pelan tindakan", help: "Bahasa yang perlu digunakan oleh AI untuk menulis pelan tindakan." },
+        wordLimit: { label: "Panjang teks utama", help: "Julat bilangan patah perkataan, tidak termasuk jadual. Biarkan kosong untuk 400–500.",
+          ex: "400–500" },
+
+        audience: { label: "Khalayak sasaran", help: "Biarkan kosong untuk menggunakan khalayak pengurusan tertinggi lalai seperti dalam contoh." }
+      }
+    }
+  };
+  // Role and audience examples are the defaults themselves
+  ["en", "ms"].forEach(l => {
+    T[l].fields.role.ex = DEFAULTS[l].role;
+    T[l].fields.audience.ex = DEFAULTS[l].audience;
+  });
+
+  /* ---------- State ---------- */
+  const STORE_KEY = "craft-blueprint-builder-v2";
+  const blankState = () => ({
+    lang: "en", outputLang: null, useCaseCount: "range", roadmap: true, maturity: ""
+  });
+  let state = blankState();
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
+    if (saved && typeof saved === "object") state = Object.assign(blankState(), saved);
+  } catch (e) { /* storage unavailable: start fresh */ }
+  if (state.lang !== "en" && state.lang !== "ms") state.lang = "en";
+
+  function save() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
+  }
+
+  /* ---------- Helpers ---------- */
+  const $ = id => document.getElementById(id);
+  const val = id => (typeof state[id] === "string" ? state[id].trim() : "");
+
+  // Formats a value that follows "Label:". Multi-line values become an indented list.
+  function after(text, indent) {
+    const lines = text.split(/\r?\n/).map(s => s.trim()).filter(Boolean)
+      .map(s => s.replace(/^[-•*]\s*/, ""));
+    if (lines.length <= 1) return " " + (lines[0] || "");
+    return "\n" + lines.map(s => indent + "- " + s).join("\n");
+  }
+  const outLang = () => state.outputLang || state.lang;
+
+  /* ---------- Prompt builders ---------- */
+  function buildEN() {
+    const P = PH.en, D = DEFAULTS.en;
+    const ministry = val("ministry") || P.ministry;
+    const note = val("maturityNote");
+    let maturity;
+    if (state.maturity) maturity = T.en.options.maturity[state.maturity] + (note ? " — " + note : "");
+    else maturity = note || P.maturity;
+    const count = state.useCaseCount === "range" ? "3 to 5" : state.useCaseCount;
+    const role = val("role") || D.role;
+    const audience = val("audience") || D.audience;
+    const words = val("wordLimit") || D.words;
+    const lang = outLang() === "ms" ? "Bahasa Melayu (official DBP standard)" : "English";
+    const ambition = val("ambition"), cands = val("candidates"), rpsa = val("rpsa");
+    const f = id => after(val(id) || P[id], "    ");
+
+    const out = [];
+    out.push(`# CRAFT PROMPT: One-Page AI Strategy Blueprint for ${ministry}`, "");
+    out.push("## C — CONTEXT");
+    out.push(`I am preparing a one-page AI strategy blueprint for ${ministry}, Malaysia.`);
+    out.push(`- Core mandate:${f("mandate")}`);
+    out.push(`- Strategic priorities:${f("priorities")}`);
+    out.push(`- Current digital/AI maturity: ${maturity}`);
+    out.push(`- Main service pain points:${f("painPoints")}`);
+    out.push(`- Key data assets:${f("dataAssets")}`);
+    out.push(`- Existing systems and platforms:${f("systems")}`);
+    out.push(`- Constraints:${f("constraints")}`, "");
+    out.push("The blueprint must follow a five-part structure (Ambition, Priority Pipeline, Shared Rails, Human Controls, Auditable Indicators)" + (state.roadmap ? ", followed by a 100-Day Acceleration Roadmap," : "") + " and align with Akta 864, AIaaS JDN certified environments, GPAISA risk tiers and RPSA 2026–2030 targets.", "");
+    out.push("## R — ROLE", role, "");
+    out.push("## A — ACTION", "Draft the blueprint as follows:");
+    out.push(`1. Ambition: Write one sentence in the form "By 2030, ${ministry} leverages AI to achieve [specific economic or citizen outcome]." The outcome must be specific, measurable and linked to the ministry's mandate.` +
+      (ambition ? `\n   Intended direction:${after(ambition, "     ")}` : ""));
+    out.push(`2. Priority Pipeline (Use Cases): Propose ${count} AI use cases. For each, state the problem, the proposed AI solution, the public value, the data readiness level (High / Medium / Low) and the justification for its selection.` +
+      (cands ? `\n   Assess these candidate use cases first, and keep, refine or replace each one as needed:${after(cands, "     ")}` : ""));
+    out.push("3. Shared Rails (Data & Platforms): Identify the datasets to be catalogued under Akta 864, and state which use cases can run on AIaaS JDN certified environments before any custom technology is built.");
+    out.push("4. Human Controls (Governance): Define the responsibilities of the Accountable AI Lead, assign an indicative GPAISA risk tier to each use case, and describe the human oversight mechanism for each pilot.");
+    out.push("5. Auditable Indicators (Impact): For each use case, propose indicators covering hours saved, turnaround speed, accuracy benchmarks and public trust scores, each with a baseline, target and data source, " +
+      (rpsa ? `mapped to the following RPSA 2026–2030 targets:${after(rpsa, "     ")}` : "mapped to the relevant RPSA 2026–2030 targets [insert specific targets if known]."));
+    if (state.roadmap) {
+      const start = val("roadmapStart"), cp = val("checkpoint");
+      out.push(`6. 100-Day Acceleration Roadmap: Turn the blueprint into a 100-day plan${start ? ` starting on ${start}` : ""}, using these three phases and milestones:`);
+      out.push("   - Phase 1: Mobilise (Days 1–30): Appoint an Accountable AI Lead; shortlist 3 high-value operational use cases from the Priority Pipeline.");
+      out.push("   - Phase 2: Build (Days 31–60): Register the team with the AIaaS JDN platform; deploy a pilot in a secure JDN sandbox; secure data sharing agreements under Akta 864.");
+      out.push("   - Phase 3: Prove (Days 61–100): Measure time and cost savings against baselines; present the data at management meetings; make the definitive choice to scale, pivot or stop.");
+      out.push("   For each milestone, state the owner, the key deliverable and the evidence that shows it is complete" + (start ? ", with calendar dates for each phase" : "") + ". Recommend which use case should become the first live pilot and explain why. Baselines for the Section 5 indicators must be measured before or during Phase 2 so that savings can be proven in Phase 3. State the criteria for the scale, pivot or stop decision.");
+      out.push(`   End goal: Bring one live pilot and measured baseline metrics to the next cohort checkpoint${cp ? ` (${cp})` : ""}.`);
+    }
+    out.push("", "Rules:");
+    out.push("- Do not invent statistics, legal provisions or policy targets. Where information is missing, mark it as [TO BE CONFIRMED] and state your assumption.");
+    out.push("- If the context above is insufficient, ask up to 5 clarifying questions before drafting.");
+    out.push("- Prioritise use cases with high public value and high data readiness over technically ambitious ones.", "");
+    out.push("## F — FORMAT");
+    out.push(`- Title: "The Executive Blueprint: ${ministry} AI Strategy on One Page"`);
+    out.push("- Five numbered sections using the headings in Action items 1 to 5");
+    out.push("- Use tables for Sections 2 and 5");
+    out.push(`- Keep the main text to about one page (${words} words, excluding tables)`);
+    if (state.roadmap) out.push(`- End with "The 100-Day Acceleration Roadmap" as a table with the columns Phase, Days, Milestone, Owner and Deliverable/Evidence, followed by a one-line statement of what will be brought to the next cohort checkpoint`);
+    out.push(`- Output language: ${lang}`, "");
+    out.push("## T — TARGET AUDIENCE", audience);
+    return out.join("\n");
+  }
+
+  function buildMS() {
+    const P = PH.ms, D = DEFAULTS.ms;
+    const ministry = val("ministry") || P.ministry;
+    const note = val("maturityNote");
+    let maturity;
+    if (state.maturity) maturity = T.ms.options.maturity[state.maturity] + (note ? " — " + note : "");
+    else maturity = note || P.maturity;
+    const count = state.useCaseCount === "range" ? "3 hingga 5" : state.useCaseCount;
+    const role = val("role") || D.role;
+    const audience = val("audience") || D.audience;
+    const words = val("wordLimit") || D.words;
+    const lang = outLang() === "ms" ? "Bahasa Melayu (standard rasmi DBP)" : "Bahasa Inggeris";
+    const ambition = val("ambition"), cands = val("candidates"), rpsa = val("rpsa");
+    const f = id => after(val(id) || P[id], "    ");
+
+    const out = [];
+    out.push(`# GESAAN CRAFT: Pelan Tindakan Strategi AI Satu Halaman bagi ${ministry}`, "");
+    out.push("## K — KONTEKS (Context)");
+    out.push(`Saya sedang menyediakan pelan tindakan strategi kecerdasan buatan (AI) satu halaman bagi ${ministry}, Malaysia.`);
+    out.push(`- Mandat teras:${f("mandate")}`);
+    out.push(`- Keutamaan strategik:${f("priorities")}`);
+    out.push(`- Tahap kematangan digital/AI semasa: ${maturity}`);
+    out.push(`- Isu utama perkhidmatan:${f("painPoints")}`);
+    out.push(`- Aset data utama:${f("dataAssets")}`);
+    out.push(`- Sistem dan platform sedia ada:${f("systems")}`);
+    out.push(`- Kekangan:${f("constraints")}`, "");
+    out.push("Pelan tindakan ini hendaklah mengikut struktur lima bahagian (Aspirasi, Saluran Keutamaan, Landasan Perkongsian, Kawalan Manusia, Petunjuk Boleh Diaudit)" + (state.roadmap ? ", diikuti dengan Pelan Hala Tuju Pecutan 100 Hari," : "") + " dan sejajar dengan Akta 864, persekitaran AIaaS JDN yang diperakui, tahap risiko GPAISA serta sasaran RPSA 2026–2030.", "");
+    out.push("## R — PERANAN (Role)", role, "");
+    out.push("## A — TINDAKAN (Action)", "Sediakan pelan tindakan seperti yang berikut:");
+    out.push(`1. Aspirasi: Tulis satu ayat dalam bentuk "Menjelang tahun 2030, ${ministry} memanfaatkan AI untuk mencapai [hasil ekonomi atau hasil kepada rakyat yang khusus]." Hasil tersebut hendaklah khusus, boleh diukur dan berkait dengan mandat kementerian.` +
+      (ambition ? `\n   Hala tuju yang dihasratkan:${after(ambition, "     ")}` : ""));
+    out.push(`2. Saluran Keutamaan (Kes Penggunaan): Cadangkan ${count} kes penggunaan AI. Bagi setiap kes, nyatakan masalah, penyelesaian AI yang dicadangkan, nilai awam, tahap kesediaan data (Tinggi / Sederhana / Rendah) dan justifikasi pemilihannya.` +
+      (cands ? `\n   Nilai kes penggunaan yang dicadangkan yang berikut terlebih dahulu, dan kekalkan, perhalusi atau gantikan setiap kes mengikut keperluan:${after(cands, "     ")}` : ""));
+    out.push("3. Landasan Perkongsian (Data dan Platform): Kenal pasti set data yang perlu dikatalogkan di bawah Akta 864 dan nyatakan kes penggunaan yang boleh dilaksanakan dalam persekitaran AIaaS JDN yang diperakui sebelum sebarang teknologi khusus dibangunkan.");
+    out.push("4. Kawalan Manusia (Tadbir Urus): Tetapkan tanggungjawab Ketua AI Akauntabel, tentukan tahap risiko GPAISA indikatif bagi setiap kes penggunaan dan huraikan mekanisme pengawasan manusia bagi setiap projek rintis.");
+    out.push("5. Petunjuk Boleh Diaudit (Impak): Bagi setiap kes penggunaan, cadangkan petunjuk yang merangkumi jumlah jam yang dijimatkan, tempoh penyelesaian, penanda aras ketepatan dan skor kepercayaan awam. Setiap petunjuk hendaklah disertai nilai asas, sasaran dan sumber data, serta " +
+      (rpsa ? `dipetakan kepada sasaran RPSA 2026–2030 yang berikut:${after(rpsa, "     ")}` : "dipetakan kepada sasaran RPSA 2026–2030 yang berkaitan [masukkan sasaran khusus jika diketahui]."));
+    if (state.roadmap) {
+      const start = val("roadmapStart"), cp = val("checkpoint");
+      out.push(`6. Pelan Hala Tuju Pecutan 100 Hari: Terjemahkan pelan tindakan ini kepada pelan 100 hari${start ? ` yang bermula pada ${start}` : ""} berdasarkan tiga fasa dan tonggak pencapaian yang berikut:`);
+      out.push("   - Fasa 1: Menggerakkan (Hari 1–30): Melantik Ketua AI Akauntabel; menyenarai pendek 3 kes penggunaan operasi yang bernilai tinggi daripada Saluran Keutamaan.");
+      out.push("   - Fasa 2: Membina (Hari 31–60): Mendaftarkan pasukan dengan platform AIaaS JDN; melaksanakan projek rintis dalam kotak pasir (sandbox) JDN yang selamat; memeterai perjanjian perkongsian data di bawah Akta 864.");
+      out.push("   - Fasa 3: Membuktikan (Hari 61–100): Mengukur penjimatan masa dan kos berbanding dengan nilai asas; membentangkan data dalam mesyuarat pengurusan; membuat keputusan muktamad sama ada untuk memperluas, mengubah hala tuju atau menghentikan projek.");
+      out.push("   Bagi setiap tonggak pencapaian, nyatakan pegawai yang bertanggungjawab, hasil utama dan bukti yang menunjukkan tonggak tersebut telah disempurnakan" + (start ? ", berserta tarikh kalendar bagi setiap fasa" : "") + ". Syorkan kes penggunaan yang wajar dijadikan projek rintis langsung yang pertama dan terangkan sebabnya. Nilai asas bagi petunjuk dalam Bahagian 5 hendaklah diukur sebelum atau semasa Fasa 2 supaya penjimatan dapat dibuktikan dalam Fasa 3. Nyatakan kriteria bagi keputusan untuk memperluas, mengubah hala tuju atau menghentikan projek.");
+      out.push(`   Sasaran akhir: Membawa satu projek rintis langsung dan metrik nilai asas yang telah diukur ke titik semakan kohort yang berikutnya${cp ? ` (${cp})` : ""}.`);
+    }
+    out.push("", "Peraturan:");
+    out.push("- Jangan mereka-reka statistik, peruntukan undang-undang atau sasaran dasar. Jika maklumat tidak mencukupi, tandakan sebagai [AKAN DISAHKAN] dan nyatakan andaian anda.");
+    out.push("- Jika konteks di atas tidak mencukupi, kemukakan maksimum 5 soalan penjelasan sebelum menyediakan draf.");
+    out.push("- Utamakan kes penggunaan yang mempunyai nilai awam dan tahap kesediaan data yang tinggi berbanding dengan kes yang bercita-cita tinggi dari segi teknikal.", "");
+    out.push("## F — FORMAT");
+    out.push(`- Tajuk: "Pelan Tindakan Eksekutif: Strategi AI ${ministry} dalam Satu Halaman"`);
+    out.push("- Lima bahagian bernombor menggunakan tajuk dalam item Tindakan 1 hingga 5");
+    out.push("- Gunakan jadual bagi Bahagian 2 dan Bahagian 5");
+    out.push(`- Hadkan teks utama kepada kira-kira satu halaman (${words} patah perkataan, tidak termasuk jadual)`);
+    if (state.roadmap) out.push(`- Akhiri dengan "Pelan Hala Tuju Pecutan 100 Hari" dalam bentuk jadual dengan lajur Fasa, Tempoh (Hari), Tonggak Pencapaian, Pegawai Bertanggungjawab dan Hasil/Bukti, diikuti dengan satu ayat yang menyatakan perkara yang akan dibawa ke titik semakan kohort yang berikutnya`);
+    out.push(`- Bahasa output: ${lang}`, "");
+    out.push("## T — KHALAYAK SASARAN (Target Audience)", audience);
+    return out.join("\n");
+  }
+
+  const buildPrompt = () => (state.lang === "ms" ? buildMS() : buildEN());
+
+  /* ---------- Rendering ---------- */
+  function renderStatic() {
+    const t = T[state.lang];
+    document.documentElement.lang = state.lang === "ms" ? "ms" : "en";
+    document.title = t.docTitle;
+    $("t-title").textContent = t.title;
+    $("t-subtitle").textContent = t.subtitle;
+    $("t-langLabel").textContent = t.langLabel;
+    $("fillAll").textContent = t.fillAll;
+    $("clearAll").textContent = t.clearAll;
+    $("t-previewTitle").textContent = t.previewTitle;
+    $("copyBtn").textContent = t.copy;
+    $("dlBtn").textContent = t.download;
+    $("t-footer").textContent = t.footer;
+    $("t-jump").textContent = t.jump;
+    document.querySelectorAll(".seg button").forEach(b =>
+      b.setAttribute("aria-pressed", String(b.dataset.lang === state.lang)));
+
+    const nav = $("craft-nav");
+    nav.replaceChildren();
+    SECTIONS.forEach(s => {
+      const a = document.createElement("a");
+      a.href = "#sec-" + s;
+      const L = document.createElement("span"); L.className = "L"; L.textContent = s === "C" && state.lang === "ms" ? "K" : s;
+      const W = document.createElement("span"); W.className = "W"; W.textContent = t.sections[s][0];
+      a.append(L, W);
+      nav.append(a);
+    });
+  }
+
+  function renderForm() {
+    const t = T[state.lang];
+    const root = $("sections");
+    root.replaceChildren();
+    SECTIONS.forEach(s => {
+      const sec = document.createElement("section");
+      sec.className = "block"; sec.id = "sec-" + s;
+      const head = document.createElement("div"); head.className = "block-head";
+      const L = document.createElement("span"); L.className = "L"; L.setAttribute("aria-hidden", "true");
+      L.textContent = s === "C" && state.lang === "ms" ? "K" : s;
+      const hw = document.createElement("div");
+      const h2 = document.createElement("h2"); h2.textContent = t.sections[s][0];
+      const p = document.createElement("p"); p.textContent = t.sections[s][1];
+      hw.append(h2, p); head.append(L, hw); sec.append(head);
+
+      FIELDS.filter(f => f.s === s).forEach(f => sec.append(renderField(f, t)));
+      root.append(sec);
+    });
+  }
+
+  function renderField(f, t) {
+    const meta = t.fields[f.id];
+    const wrap = document.createElement("div"); wrap.className = "field";
+    const inputId = "f-" + f.id, helpId = "h-" + f.id;
+
+    if (f.type === "checkbox") {
+      const row = document.createElement("div"); row.className = "check";
+      const cb = document.createElement("input"); cb.type = "checkbox"; cb.id = inputId;
+      cb.checked = !!state[f.id]; cb.setAttribute("aria-describedby", helpId);
+      cb.addEventListener("change", () => {
+        state[f.id] = cb.checked;
+        document.querySelectorAll(`[data-depends="${f.id}"]`).forEach(e => { e.disabled = !cb.checked; });
+        update();
+      });
+      const lw = document.createElement("div");
+      const lab = document.createElement("label"); lab.htmlFor = inputId; lab.textContent = meta.label;
+      const help = document.createElement("p"); help.className = "help"; help.id = helpId; help.textContent = meta.help;
+      lw.append(lab, help); row.append(cb, lw); wrap.append(row);
+      return wrap;
+    }
+
+    const top = document.createElement("div"); top.className = "field-top";
+    const lab = document.createElement("label"); lab.htmlFor = inputId; lab.textContent = meta.label;
+    if (f.optional) { const o = document.createElement("span"); o.className = "opt"; o.textContent = "(" + t.optional + ")"; lab.append(o); }
+    top.append(lab);
+
+    let exampleValue = null;
+    if (f.type === "select") exampleValue = f.id === "outputLang" ? state.lang : f.example;
+    else if (meta.ex) exampleValue = meta.ex;
+
+    let el;
+    if (f.type === "select") {
+      el = document.createElement("select");
+      f.options.forEach(opt => {
+        const o = document.createElement("option"); o.value = opt; o.textContent = t.options[f.id][opt];
+        el.append(o);
+      });
+      el.value = f.id === "outputLang" ? outLang() : (state[f.id] ?? f.options[0]);
+      el.addEventListener("change", () => { state[f.id] = el.value; update(); });
+    } else {
+      el = document.createElement(f.type === "textarea" ? "textarea" : "input");
+      if (f.type === "text") el.type = "text";
+      if (f.rows) el.rows = f.rows;
+      el.value = state[f.id] || "";
+      if (meta.ex) el.placeholder = t.egPrefix + meta.ex;
+      el.addEventListener("input", () => { state[f.id] = el.value; update(); });
+    }
+    el.id = inputId; el.setAttribute("aria-describedby", helpId);
+    if (f.dependsOn) { el.dataset.depends = f.dependsOn; el.disabled = !state[f.dependsOn]; }
+
+    if (exampleValue !== null) {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "ex-btn"; b.textContent = t.useExample;
+      if (f.dependsOn) { b.dataset.depends = f.dependsOn; b.disabled = !state[f.dependsOn]; }
+      b.setAttribute("aria-label", t.useExample + ": " + meta.label);
+      b.addEventListener("click", () => {
+        state[f.id] = exampleValue; el.value = exampleValue; update(); el.focus();
+      });
+      top.append(b);
+    }
+
+    const help = document.createElement("p"); help.className = "help"; help.id = helpId; help.textContent = meta.help;
+    wrap.append(top, help, el);
+    return wrap;
+  }
+
+  // Render the prompt, softly marking any [placeholder] still left in it
+  function renderOutput(text) {
+    const out = $("output");
+    out.replaceChildren();
+    const re = /\[[^\]\n]+\]/g;
+    let last = 0, m;
+    while ((m = re.exec(text))) {
+      if (m.index > last) out.append(document.createTextNode(text.slice(last, m.index)));
+      const span = document.createElement("span"); span.className = "ph"; span.textContent = m[0];
+      out.append(span);
+      last = m.index + m[0].length;
+    }
+    if (last < text.length) out.append(document.createTextNode(text.slice(last)));
+  }
+
+  function update() {
+    const t = T[state.lang];
+    const text = buildPrompt();
+    renderOutput(text);
+    const filled = TEXT_FIELDS.filter(f => val(f.id)).length;
+    $("progress").textContent = t.progress(filled, TEXT_FIELDS.length);
+    const words = text.split(/\s+/).filter(Boolean).length;
+    $("stats").textContent = t.stats(words, text.length);
+    save();
+  }
+
+  function renderAll() { renderStatic(); renderForm(); update(); }
+
+  /* ---------- Toast ---------- */
+  let toastTimer;
+  function toast(msg) {
+    const el = $("toast");
+    el.textContent = msg; el.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove("show"), 2200);
+  }
+
+  /* ---------- Actions ---------- */
+  document.querySelectorAll(".seg button").forEach(b => b.addEventListener("click", () => {
+    if (state.lang === b.dataset.lang) return;
+    state.lang = b.dataset.lang;
+    renderAll();
+  }));
+
+  $("fillAll").addEventListener("click", () => {
+    const t = T[state.lang];
+    FIELDS.forEach(f => {
+      if (f.type === "checkbox") state[f.id] = true;
+      else if (f.type === "select") state[f.id] = f.id === "outputLang" ? state.lang : f.example;
+      else if (t.fields[f.id].ex) state[f.id] = t.fields[f.id].ex;
+    });
+    renderForm(); update(); toast(t.filled);
+  });
+
+  $("clearAll").addEventListener("click", () => {
+    const t = T[state.lang];
+    if (!window.confirm(t.confirmClear)) return;
+    const lang = state.lang;
+    state = blankState(); state.lang = lang;
+    renderForm(); update(); toast(t.cleared);
+  });
+
+  $("copyBtn").addEventListener("click", async () => {
+    const t = T[state.lang];
+    const text = buildPrompt();
+    try {
+      await navigator.clipboard.writeText(text);
+      toast(t.copied);
+    } catch (e) {
+      // Fallback for browsers without the async clipboard API
+      const ta = document.createElement("textarea");
+      ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.append(ta); ta.select();
+      let ok = false;
+      try { ok = document.execCommand("copy"); } catch (err) { ok = false; }
+      ta.remove();
+      toast(ok ? t.copied : t.copyFail);
+    }
+  });
+
+  $("dlBtn").addEventListener("click", () => {
+    const t = T[state.lang];
+    const slug = (val("ministry") || "ministry").toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "ministry";
+    const blob = new Blob([buildPrompt()], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = `craft-prompt-${slug}-${state.lang}.md`;
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    toast(t.downloaded);
+  });
+
+  renderAll();
+})();
+</script>
+</body>
+</html>
