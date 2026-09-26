@@ -3,165 +3,248 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>CRAFT prompt builder</title>
-<meta name="description" content="Generate a reusable CRAFT prompt for a one-page ministry AI strategy blueprint, in English or Bahasa Melayu.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
+<title>CRAFT Prompt Builder</title>
+<meta name="description" content="Generate a CRAFT prompt for a one-page ministry AI strategy blueprint and 100-day acceleration roadmap, in English or Bahasa Melayu.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='12' fill='%2313294B'/><text x='32' y='45' text-anchor='middle' font-family='Georgia,serif' font-size='40' font-weight='600' fill='%23D9B868'>C</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,400;1,8..60,500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink: #221C26;
-    --muted: #6A6270;
-    --plum: #5B3B57;
-    --plum-soft: #EFE8EE;
-    --mustard: #F2C14E;
-    --paper: #F5F6F3;
+    --band: #102443;
+    --band-ink: #FFFFFF;
+    --band-muted: #BAC5D7;
+    --band-line: #33496E;
+    --paper: #EDF0F4;
     --surface: #FFFFFF;
-    --line: #D9D5DC;
-    --focus: #1E6FB8;
-    --sans: "Public Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --ink: #172033;
+    --muted: #556074;
+    --line: #D5DBE4;
+    --navy: #13294B;
+    --navy-hover: #1F3D6B;
+    --on-navy: #FFFFFF;
+    --badge: #13294B;
+    --gold: #D9B868;
+    --gold-ink: #8A6A22;
+    --gold-soft: #F4ECD9;
+    --focus: #2F6FD0;
+    --shadow: 0 1px 2px rgba(16, 36, 67, 0.06), 0 8px 24px rgba(16, 36, 67, 0.06);
+    --serif: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+    --sans: "IBM Plex Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
-    box-sizing: border-box;
-    padding-top: env(safe-area-inset-top, 0px);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --ink: #EDE8EF; --muted: #A79FAD; --plum: #D2B3CD; --plum-soft: #2C2430;
-      --paper: #17141A; --surface: #211D25; --line: #3A3340; --focus: #7DB6F0;
+      --band: #0A1628; --band-muted: #9FAEC6; --band-line: #253858;
+      --paper: #0F1827; --surface: #162134; --ink: #E7ECF3; --muted: #9CA8BB; --line: #2A3850;
+      --navy: #B7CBEE; --navy-hover: #CFDDF5; --on-navy: #0F1827; --badge: #22365A;
+      --gold: #D9B868; --gold-ink: #D9BD80; --gold-soft: #3A3122; --focus: #7FB0F5;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
     }
   }
   :root[data-theme="dark"] {
-    --ink: #EDE8EF; --muted: #A79FAD; --plum: #D2B3CD; --plum-soft: #2C2430;
-    --paper: #17141A; --surface: #211D25; --line: #3A3340; --focus: #7DB6F0;
+    --band: #0A1628; --band-muted: #9FAEC6; --band-line: #253858;
+    --paper: #0F1827; --surface: #162134; --ink: #E7ECF3; --muted: #9CA8BB; --line: #2A3850;
+    --navy: #B7CBEE; --navy-hover: #CFDDF5; --on-navy: #0F1827; --badge: #22365A;
+    --gold: #D9B868; --gold-ink: #D9BD80; --gold-soft: #3A3122; --focus: #7FB0F5;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
   }
-  *, *::before, *::after { box-sizing: inherit; }
-  html { scroll-padding-top: env(safe-area-inset-top, 0px); scroll-behavior: smooth; }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
   body {
     margin: 0; background: var(--paper); color: var(--ink);
     font-family: var(--sans); font-size: 16px; line-height: 1.55;
     -webkit-font-smoothing: antialiased;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
-  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 0 24px; }
+  @media (max-width: 640px) { .wrap { padding: 0 16px; } }
   button, input, select, textarea { font: inherit; color: inherit; }
   :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 
-  /* Masthead */
-  .masthead { border-bottom: 1px solid var(--line); background: var(--surface); }
-  .top { display: flex; flex-wrap: wrap; gap: 20px 40px; align-items: flex-end; justify-content: space-between; padding-top: 28px; }
-  .brand { max-width: 62ch; }
-  h1 { margin: 0 0 6px; font-size: clamp(1.6rem, 3vw, 2.1rem); font-weight: 800; letter-spacing: -0.01em; color: var(--plum); line-height: 1.15; }
-  .brand p { margin: 0; color: var(--muted); }
-  .lang { display: flex; flex-direction: column; gap: 6px; }
-  .lang-label { font-size: 0.85rem; color: var(--muted); }
-  .seg { display: inline-flex; border: 1.5px solid var(--plum); border-radius: 6px; overflow: hidden; }
-  .seg button { border: 0; background: transparent; padding: 8px 16px; cursor: pointer; font-weight: 600; color: var(--plum); }
-  .seg button + button { border-left: 1.5px solid var(--plum); }
-  .seg button[aria-pressed="true"] { background: var(--plum); color: var(--surface); }
-
-  /* CRAFT strip: the one bold element, echoing the highlighted headings on the slide */
-  .craft { display: flex; gap: clamp(12px, 4vw, 48px); padding-top: 22px; padding-bottom: 18px; overflow-x: auto; }
-  .craft a { text-decoration: none; color: var(--ink); display: flex; align-items: baseline; gap: 8px; white-space: nowrap; border-radius: 4px; }
-  .craft .L {
-    font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 800; line-height: 1; color: var(--plum);
-    background: linear-gradient(transparent 58%, var(--mustard) 58%, var(--mustard) 92%, transparent 92%);
-    padding: 0 4px;
+  /* ---------- Masthead: navy cover band ---------- */
+  .masthead { background: var(--band); color: var(--band-ink); padding-top: env(safe-area-inset-top, 0px); }
+  .bar {
+    display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between;
+    padding-top: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--band-line);
   }
-  .craft .W { font-size: 0.95rem; color: var(--muted); font-weight: 500; }
-  .craft a:hover .W { color: var(--ink); }
-
-  /* Layout */
-  .layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; padding-top: 28px; padding-bottom: 40px; }
-  @media (min-width: 1000px) { .layout { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 48px; } }
-
-  .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 8px; }
-  .btn { border: 1.5px solid var(--plum); background: var(--surface); color: var(--plum); padding: 8px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; }
-  .btn:hover { background: var(--plum-soft); }
-  .btn.primary { background: var(--plum); color: var(--surface); }
-  .btn.primary:hover { filter: brightness(1.1); background: var(--plum); }
-  .btn.quiet { border-color: var(--line); color: var(--muted); }
-  .progress { margin-left: auto; font-size: 0.9rem; color: var(--muted); }
-
-  /* Sections */
-  section.block { padding: 28px 0 8px; border-top: 1px solid var(--line); margin-top: 20px; }
-  section.block:first-child { border-top: 0; margin-top: 0; }
-  .block-head { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 18px; }
-  .block-head .L {
-    font-size: 2.4rem; font-weight: 800; line-height: 1; color: var(--plum); padding: 0 4px;
-    background: linear-gradient(transparent 58%, var(--mustard) 58%, var(--mustard) 92%, transparent 92%);
+  .eyebrow { display: flex; align-items: center; gap: 12px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--band-muted); }
+  .eyebrow .mono-mark {
+    width: 30px; height: 30px; border: 1.5px solid var(--gold); border-radius: 6px; display: grid; place-items: center;
+    font-family: var(--serif); font-size: 1.1rem; font-weight: 600; color: var(--gold); letter-spacing: 0;
   }
-  .block-head h2 { margin: 2px 0 2px; font-size: 1.25rem; font-weight: 800; }
-  .block-head p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+  .lang { display: flex; align-items: center; gap: 10px; }
+  .lang-label { font-size: 0.82rem; color: var(--band-muted); }
+  .seg { display: inline-flex; border: 1px solid var(--band-muted); border-radius: 6px; overflow: hidden; }
+  .seg button { border: 0; background: transparent; padding: 6px 14px; cursor: pointer; font-weight: 600; font-size: 0.88rem; color: var(--band-ink); }
+  .seg button + button { border-left: 1px solid var(--band-muted); }
+  .seg button:hover { background: rgba(255, 255, 255, 0.08); }
+  .seg button[aria-pressed="true"] { background: var(--band-ink); color: #102443; }
 
-  .field { margin-bottom: 20px; max-width: 72ch; }
-  .field-top { display: flex; gap: 12px; align-items: baseline; justify-content: space-between; margin-bottom: 4px; }
-  .field label { font-weight: 600; }
-  .opt { font-weight: 400; color: var(--muted); font-size: 0.85rem; margin-left: 6px; }
-  .ex-btn { border: 0; background: none; color: var(--plum); font-weight: 600; font-size: 0.85rem; cursor: pointer; padding: 2px 4px; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+  .hero { padding-top: 30px; padding-bottom: 4px; display: grid; gap: 16px; }
+  h1 {
+    margin: 0; font-family: var(--serif); font-weight: 600; font-size: clamp(1.85rem, 3.4vw, 2.75rem);
+    line-height: 1.12; letter-spacing: -0.01em; max-width: 36ch; text-wrap: balance;
+  }
+  .hero p { margin: 0; color: var(--band-muted); font-size: 1.02rem; max-width: 70ch; }
+  .steps { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px 28px; counter-reset: step; }
+  .steps li { counter-increment: step; display: flex; align-items: center; gap: 10px; font-size: 0.92rem; color: var(--band-ink); }
+  .steps li::before {
+    content: counter(step); flex: none; width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--gold);
+    color: var(--gold); display: grid; place-items: center; font-size: 0.78rem; font-weight: 600;
+  }
+
+  /* CRAFT tabs: binder dividers that sit on the band and open onto the page */
+  .tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; padding-top: 28px; }
+  .tab {
+    display: flex; flex-direction: column; gap: 2px; text-decoration: none; color: var(--ink);
+    background: var(--paper); border-radius: 10px 10px 0 0; padding: 14px 18px 14px; position: relative;
+  }
+  .tab::before { content: ""; position: absolute; left: 18px; right: 18px; top: 0; height: 3px; background: var(--gold); border-radius: 0 0 2px 2px; transform: scaleX(0); transform-origin: left; transition: transform .2s; }
+  .tab:hover::before { transform: scaleX(1); }
+  @media (prefers-reduced-motion: reduce) { .tab::before { transition: none; } }
+  .tab .L { font-family: var(--serif); font-weight: 600; font-size: clamp(2rem, 4vw, 2.9rem); line-height: 1; color: var(--navy); }
+  .tab .en { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 6px; }
+  .tab .ms { font-family: var(--serif); font-style: italic; font-size: 0.95rem; color: var(--gold-ink); line-height: 1.25; }
+  .dots { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid var(--muted); opacity: 0.55; }
+  .dot.on { background: var(--navy); border-color: var(--navy); opacity: 1; }
+  .dots.none { font-size: 0.75rem; color: var(--muted); }
+  @media (max-width: 640px) {
+    .tabs { gap: 4px; padding-top: 24px; }
+    .tab { padding: 10px 8px 10px; border-radius: 8px 8px 0 0; }
+    .tab::before { left: 8px; right: 8px; }
+    .tab .en { font-size: 0.66rem; letter-spacing: 0.04em; }
+    .tab .ms { font-size: 0.78rem; }
+    .dot { width: 5px; height: 5px; border-width: 1px; }
+    .dots { gap: 3px; }
+  }
+
+  /* ---------- Layout ---------- */
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; padding-top: 16px; padding-bottom: 40px; }
+  @media (min-width: 1040px) { .layout { grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr); gap: 40px; } }
+
+  .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 8px 0 18px; }
+  .btn {
+    border: 1px solid var(--navy); background: var(--surface); color: var(--navy); padding: 9px 16px;
+    border-radius: 6px; font-weight: 600; font-size: 0.92rem; cursor: pointer; line-height: 1.3;
+  }
+  .btn:hover { background: var(--gold-soft); }
+  .btn.primary { background: var(--navy); color: var(--on-navy); }
+  .btn.primary:hover { background: var(--navy-hover); border-color: var(--navy-hover); }
+  .btn.quiet { border-color: var(--line); color: var(--muted); background: transparent; }
+  .btn.quiet:hover { border-color: var(--muted); color: var(--ink); background: transparent; }
+  .progress { margin-left: auto; font-size: 0.88rem; color: var(--muted); }
+
+  /* ---------- Section cards ---------- */
+  section.block {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow);
+    padding: 28px 32px 12px; margin-bottom: 20px; scroll-margin-top: 16px;
+  }
+  @media (max-width: 640px) { section.block { padding: 22px 18px 8px; } }
+  .block-head { display: flex; gap: 18px; align-items: flex-start; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+  .mark {
+    flex: none; width: 56px; height: 56px; border-radius: 8px; background: var(--badge); color: var(--gold);
+    display: grid; place-items: center; font-family: var(--serif); font-weight: 600; font-size: 2.1rem; line-height: 1;
+  }
+  .block-head h2 { margin: 0; font-family: var(--serif); font-weight: 600; font-size: 1.5rem; line-height: 1.2; }
+  .block-head .ms { font-family: var(--serif); font-style: italic; font-size: 1.05rem; color: var(--gold-ink); line-height: 1.3; }
+  .block-head p { margin: 6px 0 0; color: var(--muted); font-size: 0.95rem; }
+
+  .field { margin-bottom: 22px; }
+  .field-top { display: flex; gap: 12px; align-items: baseline; justify-content: space-between; margin-bottom: 2px; }
+  .field label { font-weight: 600; font-size: 0.98rem; }
+  .opt { font-weight: 400; color: var(--muted); font-size: 0.82rem; margin-left: 8px; }
+  .ex-btn {
+    border: 0; background: none; color: var(--gold-ink); font-weight: 600; font-size: 0.82rem; cursor: pointer;
+    padding: 2px 0; white-space: nowrap; border-bottom: 1px dotted currentColor;
+  }
+  .ex-btn:hover { color: var(--ink); border-bottom-style: solid; }
   .help { margin: 0 0 8px; color: var(--muted); font-size: 0.88rem; }
   input[type="text"], textarea, select {
-    width: 100%; background: var(--surface); border: 1.5px solid var(--line); border-radius: 5px;
-    padding: 9px 11px; line-height: 1.45;
+    width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 6px;
+    padding: 10px 12px; line-height: 1.45; transition: border-color .15s, box-shadow .15s;
   }
-  textarea { resize: vertical; min-height: 64px; }
   input[type="text"]:hover, textarea:hover, select:hover { border-color: var(--muted); }
-  input::placeholder, textarea::placeholder { color: var(--muted); opacity: 0.75; }
-  .check { display: flex; gap: 10px; align-items: flex-start; }
-  .check input { width: 18px; height: 18px; margin-top: 3px; accent-color: var(--plum); }
+  input[type="text"]:focus, textarea:focus, select:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 25%, transparent); }
+  textarea { resize: vertical; min-height: 64px; }
+  select {
+    appearance: none; -webkit-appearance: none; padding-right: 36px; cursor: pointer;
+    background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+    background-position: calc(100% - 18px) 55%, calc(100% - 13px) 55%;
+    background-size: 5px 5px; background-repeat: no-repeat;
+  }
+  input::placeholder, textarea::placeholder { color: var(--muted); opacity: 0.7; }
+  .check { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; background: var(--paper); border-radius: 8px; }
+  .check input { flex: none; width: 18px; height: 18px; margin-top: 3px; accent-color: var(--navy); }
+  .check .help { margin: 2px 0 0; }
   input:disabled, textarea:disabled, .ex-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
-  /* Preview */
-  .preview { position: relative; }
-  @media (min-width: 1000px) { .preview-inner { position: sticky; top: calc(16px + env(safe-area-inset-top, 0px)); } }
-  .preview-inner { background: var(--surface); border: 1.5px solid var(--line); border-left: 6px solid var(--plum); border-radius: 6px; }
-  .preview-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--line); }
-  .preview-head h2 { margin: 0; font-size: 1.1rem; font-weight: 800; }
-  .preview-head .actions { display: flex; gap: 8px; }
-  .stats { font-size: 0.82rem; color: var(--muted); padding: 8px 16px 0; margin: 0; }
+  /* ---------- Prompt document ---------- */
+  @media (min-width: 1040px) { .doc { position: sticky; top: 16px; align-self: start; } }
+  .doc { background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--badge); border-radius: 10px; box-shadow: var(--shadow); scroll-margin-top: 16px; }
+  .doc-head { padding: 20px 24px 16px; border-bottom: 1px solid var(--line); display: grid; gap: 14px; }
+  .doc-title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .doc-head h2 { margin: 0; font-family: var(--serif); font-weight: 600; font-size: 1.35rem; }
+  .stats { margin: 0; font-size: 0.82rem; color: var(--muted); }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; }
   #output {
-    margin: 0; padding: 12px 16px 20px; font-family: var(--mono); font-size: 0.84rem; line-height: 1.6;
-    white-space: pre-wrap; word-wrap: break-word; overflow-y: auto; max-height: 70vh;
+    margin: 0; padding: 18px 24px 24px; font-family: var(--mono); font-size: 0.82rem; line-height: 1.65;
+    white-space: pre-wrap; overflow-wrap: anywhere; overflow-y: auto; max-height: 72vh;
   }
-  @media (min-width: 1000px) { #output { max-height: calc(100vh - 150px); } }
-  #output .ph { background: var(--plum-soft); color: var(--plum); border-radius: 3px; }
+  @media (min-width: 1040px) { #output { max-height: calc(100vh - 190px); } }
+  #output .hd { font-weight: 600; color: var(--navy); }
+  #output .ph { background: var(--gold-soft); color: var(--gold-ink); border-radius: 3px; padding: 0 2px; }
+  .legend { margin: 0; padding: 12px 24px; border-top: 1px solid var(--line); font-size: 0.8rem; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+  .legend .ph-sample { background: var(--gold-soft); color: var(--gold-ink); border-radius: 3px; padding: 0 4px; font-family: var(--mono); font-size: 0.78rem; }
 
-  .foot { padding-bottom: 32px; color: var(--muted); font-size: 0.88rem; }
-  .foot p { max-width: 80ch; margin: 0; border-top: 1px solid var(--line); padding-top: 16px; }
+  .foot { padding-bottom: 36px; color: var(--muted); font-size: 0.86rem; }
+  .foot p { max-width: 90ch; margin: 0; border-top: 1px solid var(--line); padding-top: 18px; }
 
   .jump {
     position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px));
-    background: var(--plum); color: var(--surface); text-decoration: none; font-weight: 600;
-    padding: 10px 16px; border-radius: 999px; box-shadow: 0 4px 14px rgba(40, 20, 40, 0.25);
+    background: var(--navy); color: var(--on-navy); text-decoration: none; font-weight: 600; font-size: 0.92rem;
+    padding: 11px 18px; border-radius: 999px; box-shadow: 0 6px 18px rgba(16, 36, 67, 0.3);
   }
-  @media (min-width: 1000px) { .jump { display: none; } }
+  @media (min-width: 1040px) { .jump { display: none; } }
 
   .toast {
     position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 20px);
-    background: var(--ink); color: var(--paper); padding: 10px 18px; border-radius: 6px; font-weight: 600;
-    opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s;
+    background: var(--band); color: #FFFFFF; padding: 10px 18px; border-radius: 6px; font-weight: 600; font-size: 0.92rem;
+    border-left: 3px solid var(--gold); opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s;
   }
   .toast.show { opacity: 1; transform: translate(-50%, 0); }
   @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
+
+  /* Print just the prompt */
+  @media print {
+    .masthead, form, .foot, .jump, .toast, .actions, .legend { display: none !important; }
+    body { background: #fff; }
+    .layout { display: block; padding: 0; }
+    .doc { border: 0; box-shadow: none; position: static; }
+    #output { max-height: none; overflow: visible; color: #000; }
+  }
 </style>
 </head>
 <body>
 <header class="masthead">
-  <div class="wrap top">
-    <div class="brand">
-      <h1 id="t-title"></h1>
-      <p id="t-subtitle"></p>
-    </div>
+  <div class="wrap bar">
+    <div class="eyebrow"><span class="mono-mark" aria-hidden="true">C</span><span id="t-eyebrow"></span></div>
     <div class="lang" role="group" aria-labelledby="t-langLabel">
       <span id="t-langLabel" class="lang-label"></span>
       <div class="seg">
-        <button type="button" data-lang="en" aria-pressed="true">English</button>
-        <button type="button" data-lang="ms" aria-pressed="false">Bahasa Melayu</button>
+        <button type="button" data-lang="en" aria-pressed="true" lang="en">English</button>
+        <button type="button" data-lang="ms" aria-pressed="false" lang="ms">Bahasa Melayu</button>
       </div>
     </div>
   </div>
-  <nav class="wrap craft" id="craft-nav" aria-label="CRAFT"></nav>
+  <div class="wrap hero">
+    <h1 id="t-title"></h1>
+    <p id="t-subtitle"></p>
+    <ol class="steps" id="t-steps"></ol>
+  </div>
+  <nav class="wrap tabs" id="craft-nav" aria-label="CRAFT"></nav>
 </header>
 
 <main class="wrap layout">
@@ -174,18 +257,20 @@
     <div id="sections"></div>
   </form>
 
-  <aside id="preview" class="preview">
-    <div class="preview-inner">
-      <div class="preview-head">
+  <aside id="preview" class="doc" aria-labelledby="t-previewTitle">
+    <div class="doc-head">
+      <div class="doc-title">
         <h2 id="t-previewTitle"></h2>
-        <div class="actions">
-          <button type="button" class="btn primary" id="copyBtn"></button>
-          <button type="button" class="btn" id="dlBtn"></button>
-        </div>
+        <p class="stats" id="stats"></p>
       </div>
-      <p class="stats" id="stats"></p>
-      <pre id="output" tabindex="0"></pre>
+      <div class="actions">
+        <button type="button" class="btn primary" id="copyBtn"></button>
+        <button type="button" class="btn" id="dlBtn"></button>
+        <button type="button" class="btn quiet" id="printBtn"></button>
+      </div>
     </div>
+    <pre id="output" tabindex="0"></pre>
+    <p class="legend"><span class="ph-sample">[ ]</span><span id="t-legend"></span></p>
   </aside>
 </main>
 
@@ -264,28 +349,33 @@
   /* ---------- Interface text ---------- */
   const T = {
     en: {
-      docTitle: "CRAFT prompt builder",
-      title: "CRAFT prompt builder: ministry AI blueprint",
-      subtitle: "Fill in your ministry's details to generate a CRAFT prompt for a one-page AI strategy blueprint and 100-day acceleration roadmap. Any field you leave empty stays as a [placeholder] in the prompt.",
-      langLabel: "Interface and prompt language",
-      fillAll: "Fill all with examples",
-      clearAll: "Clear all",
+      docTitle: "CRAFT Prompt Builder",
+      eyebrow: "CRAFT Prompt Builder · Ministry leadership",
+      title: "One-page AI strategy blueprint and 100-day acceleration roadmap",
+      subtitle: "Enter your ministry's details to generate a structured prompt for an AI assistant. Any field you leave empty stays as a [placeholder] for you to complete later.",
+      steps: ["Complete the five CRAFT sections", "Review the prompt draft", "Copy it into your approved AI assistant"],
+      langLabel: "Language",
+      fillAll: "Load illustrative example",
+      clearAll: "Clear all fields",
       confirmClear: "Clear all fields? This cannot be undone.",
       cleared: "All fields cleared",
-      filled: "Examples added to all fields",
+      filled: "Illustrative example loaded",
       useExample: "Use example",
       egPrefix: "e.g. ",
       optional: "optional",
-      previewTitle: "Your prompt",
+      previewTitle: "Prompt draft",
       copy: "Copy prompt",
       copied: "Prompt copied",
       copyFail: "Copy failed. Select the prompt text and copy it manually.",
       download: "Download .md",
       downloaded: "Prompt downloaded",
-      progress: (n, t) => `${n} of ${t} fields filled`,
-      stats: (w, c) => `${w} words, ${c} characters`,
+      print: "Print",
+      legend: "Highlighted items are placeholders still to be completed.",
+      progress: (n, t) => `${n} of ${t} fields completed`,
+      sectionProgress: (n, t) => `${n} of ${t} fields completed`,
+      stats: (w, c) => `${w} words · ${c} characters`,
       jump: "View prompt",
-      footer: "The examples describe an illustrative scenario only. Check all figures, acts and policy targets against official sources before using the generated blueprint.",
+      footer: "The examples describe an illustrative scenario only. Verify all figures, acts and policy targets against official sources before using the generated blueprint. Your entries are stored only in this browser.",
       sections: {
         C: ["Context", "Who the ministry is and where it stands today."],
         R: ["Role", "Who the AI should act as."],
@@ -337,28 +427,33 @@
       }
     },
     ms: {
-      docTitle: "Pembina gesaan CRAFT",
-      title: "Pembina gesaan CRAFT: pelan tindakan AI kementerian",
-      subtitle: "Isikan butiran kementerian anda untuk menjana gesaan CRAFT bagi pelan tindakan strategi AI satu halaman dan pelan hala tuju pecutan 100 hari. Medan yang dibiarkan kosong akan kekal sebagai [ruang isian] dalam gesaan.",
-      langLabel: "Bahasa antara muka dan gesaan",
-      fillAll: "Isi semua dengan contoh",
-      clearAll: "Kosongkan semua",
+      docTitle: "Pembina Gesaan CRAFT",
+      eyebrow: "Pembina Gesaan CRAFT · Kepimpinan kementerian",
+      title: "Pelan tindakan strategi AI satu halaman dan pelan hala tuju pecutan 100 hari",
+      subtitle: "Masukkan butiran kementerian anda untuk menjana gesaan berstruktur bagi pembantu AI. Medan yang dibiarkan kosong akan kekal sebagai [ruang isian] untuk dilengkapkan kemudian.",
+      steps: ["Lengkapkan lima bahagian CRAFT", "Semak draf gesaan", "Salin ke dalam pembantu AI yang diluluskan"],
+      langLabel: "Bahasa",
+      fillAll: "Muatkan contoh ilustrasi",
+      clearAll: "Kosongkan semua medan",
       confirmClear: "Kosongkan semua medan? Tindakan ini tidak boleh dibatalkan.",
       cleared: "Semua medan telah dikosongkan",
-      filled: "Contoh telah dimasukkan ke dalam semua medan",
+      filled: "Contoh ilustrasi telah dimuatkan",
       useExample: "Guna contoh",
       egPrefix: "cth. ",
       optional: "pilihan",
-      previewTitle: "Gesaan anda",
+      previewTitle: "Draf gesaan",
       copy: "Salin gesaan",
       copied: "Gesaan telah disalin",
       copyFail: "Gagal menyalin. Pilih teks gesaan dan salin secara manual.",
       download: "Muat turun .md",
       downloaded: "Gesaan telah dimuat turun",
-      progress: (n, t) => `${n} daripada ${t} medan telah diisi`,
-      stats: (w, c) => `${w} patah perkataan, ${c} aksara`,
+      print: "Cetak",
+      legend: "Item yang diserlahkan ialah ruang isian yang belum dilengkapkan.",
+      progress: (n, t) => `${n} daripada ${t} medan telah dilengkapkan`,
+      sectionProgress: (n, t) => `${n} daripada ${t} medan telah dilengkapkan`,
+      stats: (w, c) => `${w} patah perkataan · ${c} aksara`,
       jump: "Lihat gesaan",
-      footer: "Contoh yang diberikan menggambarkan senario ilustrasi sahaja. Semak semua angka, akta dan sasaran dasar dengan sumber rasmi sebelum menggunakan pelan tindakan yang dijana.",
+      footer: "Contoh yang diberikan menggambarkan senario ilustrasi sahaja. Sahkan semua angka, akta dan sasaran dasar dengan sumber rasmi sebelum menggunakan pelan tindakan yang dijana. Maklumat yang dimasukkan disimpan dalam pelayar ini sahaja.",
       sections: {
         C: ["Konteks", "Profil kementerian dan kedudukannya pada masa ini."],
         R: ["Peranan", "Peranan yang perlu dimainkan oleh AI."],
@@ -524,7 +619,7 @@
 
     const out = [];
     out.push(`# GESAAN CRAFT: Pelan Tindakan Strategi AI Satu Halaman bagi ${ministry}`, "");
-    out.push("## K — KONTEKS (Context)");
+    out.push("## C — CONTEXT (Konteks)");
     out.push(`Saya sedang menyediakan pelan tindakan strategi kecerdasan buatan (AI) satu halaman bagi ${ministry}, Malaysia.`);
     out.push(`- Mandat teras:${f("mandate")}`);
     out.push(`- Keutamaan strategik:${f("priorities")}`);
@@ -534,8 +629,8 @@
     out.push(`- Sistem dan platform sedia ada:${f("systems")}`);
     out.push(`- Kekangan:${f("constraints")}`, "");
     out.push("Pelan tindakan ini hendaklah mengikut struktur lima bahagian (Aspirasi, Saluran Keutamaan, Landasan Perkongsian, Kawalan Manusia, Petunjuk Boleh Diaudit)" + (state.roadmap ? ", diikuti dengan Pelan Hala Tuju Pecutan 100 Hari," : "") + " dan sejajar dengan Akta 864, persekitaran AIaaS JDN yang diperakui, tahap risiko GPAISA serta sasaran RPSA 2026–2030.", "");
-    out.push("## R — PERANAN (Role)", role, "");
-    out.push("## A — TINDAKAN (Action)", "Sediakan pelan tindakan seperti yang berikut:");
+    out.push("## R — ROLE (Peranan)", role, "");
+    out.push("## A — ACTION (Tindakan)", "Sediakan pelan tindakan seperti yang berikut:");
     out.push(`1. Aspirasi: Tulis satu ayat dalam bentuk "Menjelang tahun 2030, ${ministry} memanfaatkan AI untuk mencapai [hasil ekonomi atau hasil kepada rakyat yang khusus]." Hasil tersebut hendaklah khusus, boleh diukur dan berkait dengan mandat kementerian.` +
       (ambition ? `\n   Hala tuju yang dihasratkan:${after(ambition, "     ")}` : ""));
     out.push(`2. Saluran Keutamaan (Kes Penggunaan): Cadangkan ${count} kes penggunaan AI. Bagi setiap kes, nyatakan masalah, penyelesaian AI yang dicadangkan, nilai awam, tahap kesediaan data (Tinggi / Sederhana / Rendah) dan justifikasi pemilihannya.` +
@@ -564,7 +659,7 @@
     out.push(`- Hadkan teks utama kepada kira-kira satu halaman (${words} patah perkataan, tidak termasuk jadual)`);
     if (state.roadmap) out.push(`- Akhiri dengan "Pelan Hala Tuju Pecutan 100 Hari" dalam bentuk jadual dengan lajur Fasa, Tempoh (Hari), Tonggak Pencapaian, Pegawai Bertanggungjawab dan Hasil/Bukti, diikuti dengan satu ayat yang menyatakan perkara yang akan dibawa ke titik semakan kohort yang berikutnya`);
     out.push(`- Bahasa output: ${lang}`, "");
-    out.push("## T — KHALAYAK SASARAN (Target Audience)", audience);
+    out.push("## T — TARGET AUDIENCE (Khalayak Sasaran)", audience);
     return out.join("\n");
   }
 
@@ -575,6 +670,7 @@
     const t = T[state.lang];
     document.documentElement.lang = state.lang === "ms" ? "ms" : "en";
     document.title = t.docTitle;
+    $("t-eyebrow").textContent = t.eyebrow;
     $("t-title").textContent = t.title;
     $("t-subtitle").textContent = t.subtitle;
     $("t-langLabel").textContent = t.langLabel;
@@ -583,21 +679,39 @@
     $("t-previewTitle").textContent = t.previewTitle;
     $("copyBtn").textContent = t.copy;
     $("dlBtn").textContent = t.download;
+    $("printBtn").textContent = t.print;
+    $("t-legend").textContent = t.legend;
     $("t-footer").textContent = t.footer;
     $("t-jump").textContent = t.jump;
     document.querySelectorAll(".seg button").forEach(b =>
       b.setAttribute("aria-pressed", String(b.dataset.lang === state.lang)));
 
+    const ol = $("t-steps");
+    ol.replaceChildren(...t.steps.map(txt => { const li = document.createElement("li"); li.textContent = txt; return li; }));
+
+    // CRAFT tabs: the letters and English words never change; Malay is added underneath
     const nav = $("craft-nav");
     nav.replaceChildren();
     SECTIONS.forEach(s => {
       const a = document.createElement("a");
-      a.href = "#sec-" + s;
-      const L = document.createElement("span"); L.className = "L"; L.textContent = s === "C" && state.lang === "ms" ? "K" : s;
-      const W = document.createElement("span"); W.className = "W"; W.textContent = t.sections[s][0];
-      a.append(L, W);
+      a.className = "tab"; a.href = "#sec-" + s;
+      a.append(...sectionName(s, "span"));
+      const dots = document.createElement("span"); dots.className = "dots"; dots.id = "dots-" + s;
+      a.append(dots);
       nav.append(a);
     });
+  }
+
+  // Letter, English word and (in Bahasa Melayu) the Malay equivalent below it
+  function sectionName(s, tag) {
+    const L = document.createElement("span"); L.className = "L"; L.textContent = s; L.setAttribute("aria-hidden", "true");
+    const en = document.createElement(tag); en.className = "en"; en.lang = "en"; en.textContent = T.en.sections[s][0];
+    const parts = [L, en];
+    if (state.lang === "ms") {
+      const ms = document.createElement("span"); ms.className = "ms"; ms.lang = "ms"; ms.textContent = T.ms.sections[s][0];
+      parts.push(ms);
+    }
+    return parts;
   }
 
   function renderForm() {
@@ -608,12 +722,11 @@
       const sec = document.createElement("section");
       sec.className = "block"; sec.id = "sec-" + s;
       const head = document.createElement("div"); head.className = "block-head";
-      const L = document.createElement("span"); L.className = "L"; L.setAttribute("aria-hidden", "true");
-      L.textContent = s === "C" && state.lang === "ms" ? "K" : s;
+      const [L, h2, ms] = sectionName(s, "h2");
+      L.className = "mark";
       const hw = document.createElement("div");
-      const h2 = document.createElement("h2"); h2.textContent = t.sections[s][0];
       const p = document.createElement("p"); p.textContent = t.sections[s][1];
-      hw.append(h2, p); head.append(L, hw); sec.append(head);
+      hw.append(...[h2, ms, p].filter(Boolean)); head.append(L, hw); sec.append(head);
 
       FIELDS.filter(f => f.s === s).forEach(f => sec.append(renderField(f, t)));
       root.append(sec);
@@ -690,15 +803,19 @@
   function renderOutput(text) {
     const out = $("output");
     out.replaceChildren();
-    const re = /\[[^\]\n]+\]/g;
-    let last = 0, m;
-    while ((m = re.exec(text))) {
-      if (m.index > last) out.append(document.createTextNode(text.slice(last, m.index)));
-      const span = document.createElement("span"); span.className = "ph"; span.textContent = m[0];
-      out.append(span);
-      last = m.index + m[0].length;
-    }
-    if (last < text.length) out.append(document.createTextNode(text.slice(last)));
+    text.split("\n").forEach((line, i) => {
+      if (i) out.append("\n");
+      const host = /^#{1,3} /.test(line) ? out.appendChild(Object.assign(document.createElement("span"), { className: "hd" })) : out;
+      const re = /\[[^\]\n]+\]/g;
+      let last = 0, m;
+      while ((m = re.exec(line))) {
+        if (m.index > last) host.append(line.slice(last, m.index));
+        const span = document.createElement("span"); span.className = "ph"; span.textContent = m[0];
+        host.append(span);
+        last = m.index + m[0].length;
+      }
+      if (last < line.length) host.append(line.slice(last));
+    });
   }
 
   function update() {
@@ -707,6 +824,17 @@
     renderOutput(text);
     const filled = TEXT_FIELDS.filter(f => val(f.id)).length;
     $("progress").textContent = t.progress(filled, TEXT_FIELDS.length);
+    SECTIONS.forEach(s => {
+      const dots = $("dots-" + s);
+      if (!dots) return;
+      const fs = TEXT_FIELDS.filter(f => f.s === s);
+      const n = fs.filter(f => val(f.id)).length;
+      dots.replaceChildren(...fs.map(f => {
+        const d = document.createElement("span"); d.className = "dot" + (val(f.id) ? " on" : ""); return d;
+      }));
+      dots.setAttribute("role", "img");
+      dots.setAttribute("aria-label", t.sectionProgress(n, fs.length));
+    });
     const words = text.split(/\s+/).filter(Boolean).length;
     $("stats").textContent = t.stats(words, text.length);
     save();
@@ -778,6 +906,8 @@
     setTimeout(() => URL.revokeObjectURL(url), 1000);
     toast(t.downloaded);
   });
+
+  $("printBtn").addEventListener("click", () => window.print());
 
   renderAll();
 })();

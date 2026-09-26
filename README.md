@@ -32,5 +32,7 @@ python -m http.server 8000
 ## Notes
 - Drafts are saved in the browser's localStorage, so each user's inputs stay on their own device.
 - Empty fields remain as [placeholders] in the prompt, highlighted in the preview.
+- The CRAFT letters and English section names (Context, Role, Action, Format, Target audience) stay the same in both languages. In Bahasa Melayu mode, the Malay equivalents appear beneath them in the interface and in brackets in the prompt headings (e.g. `## C — CONTEXT (Konteks)`).
+- The Print button prints only the prompt draft.
 - The example content describes an illustrative scenario only. Acronyms (Akta 864, AIaaS JDN, GPAISA, RPSA 2026–2030) are kept as on the source slide.
 - To change wording, edit the `T` (interface text), `PH` (placeholders), `DEFAULTS`, `buildEN()` and `buildMS()` objects in the script.
